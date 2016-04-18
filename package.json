@@ -1,0 +1,37 @@
+{
+  "name": "angular-profile",
+  "version": "1.0.0",
+  "description": "This is my project for the course JavaScript Framework.",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oakis/angular-profile.git"
+  },
+  "keywords": [
+    "mean",
+    "angular",
+    "mongodb",
+    "express",
+    "node",
+    "school",
+    "project"
+  ],
+  "author": "Anders Ekman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/oakis/angular-profile/issues"
+  },
+  "homepage": "https://github.com/oakis/angular-profile#readme",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "moment": "^2.13.0",
+    "mongoose": "^4.4.12"
+  },
+  "devDependencies": {
+    "morgan": "^1.7.0"
+  }
+}
