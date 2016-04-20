@@ -2,7 +2,7 @@
   "name": "angular-profile",
   "version": "1.0.0",
   "description": "This is my project for the course JavaScript Framework.",
-  "main": "src/app.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -26,12 +26,13 @@
   },
   "homepage": "https://github.com/oakis/angular-profile#readme",
   "dependencies": {
+    "bcryptjs": "^2.3.0",
     "body-parser": "^1.15.0",
     "express": "^4.13.4",
+    "jsonwebtoken": "^5.7.0",
     "moment": "^2.13.0",
-    "mongoose": "^4.4.12"
-  },
-  "devDependencies": {
-    "morgan": "^1.7.0"
+    "mongoose": "^4.4.12",
+    "morgan": "^1.7.0",
+    "node-uuid": "^1.4.7"
   }
 }

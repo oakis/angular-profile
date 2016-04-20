@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto'>
+	<link rel="stylesheet" href="../css/style.css">
+	<title>Login</title>
+</head>
+<body ng-app="profile">
+	<header>
+		<nav>
+			<a href="/">Hem</a> <a href="/">Visa profil</a>
+		</nav>
+	</header>
+	<div class="container" ng-controller="login">
+		<input type="text" ng-model="username">
+		<input type="password" ng-model="password">
+		<button ng-click="doLogin()">Login</button>
+		<p ng-hide="success">{{message}}</p>
+	</div>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
