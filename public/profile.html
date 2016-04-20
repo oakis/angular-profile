@@ -6,13 +6,13 @@
 	<link rel="stylesheet" href="../css/style.css">
 	<title>Profile</title>
 </head>
-<body ng-app="profile">
+<body ng-app="profile" ng-controller="showProfile">
 	<header>
 		<nav>
-			<a href="/">Hem</a> <a href="/profile?id=">Visa profil</a>
+			<a href="/">Hem</a> <a href="/profile/{{user.username}}">Visa profil</a>
 		</nav>
 	</header>
-	<div class="container" ng-controller="showProfile">
+	<div class="container">
 		<div class="profile-header">
 			<div class="profile-picture">
 				<img src="">

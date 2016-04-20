@@ -60,15 +60,57 @@ app.controller('login', function($scope,$http,$window){
 
 })
 
-app.controller('showProfile', function($scope,$http){
-	console.log(window.location.pathname);
+app.controller('register', function($scope,$http,$window){
+
+	$scope.show = true;
+	$scope.message = '';
+	
+	$scope.doRegister = function () {
+		// check if passwords match
+		if ($scope.password === $scope.password2 && $scope.email === $scope.email2) {
+			var data = {
+				'username': $scope.username,
+				'email': $scope.email,
+				'password': $scope.password
+			};
+			$http({
+				method: 'post',
+				url: '/api/register/',
+				data: data,
+				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+				transformRequest: function(obj) {
+	        var str = [];
+	        for(var p in obj)
+	        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+	        return str.join("&");
+	    	}
+			}).then(function (response) {
+		    if (response.data.success) {
+		    	$scope.show = true;
+		    	$scope.message = response.data.message;
+		    } else {
+		    	$scope.show = false;
+		    	$scope.message = response.data.message;
+		    }
+		  }, function (response) {
+		    console.log(response);
+		  });
+		} else {
+			$scope.success = false;
+			$scope.message = 'Passwords does not match!';
+		}
+	}
+
+})
+
+app.controller('showProfile', function($scope,$http,$window){
 	$http({
 		method: 'get',
 		url: '/api'+window.location.pathname
 	}).then(function (response) {
     $scope.user = response.data;
-    console.log($scope.user);
   }, function (response) {
     console.log(response);
+    //$window.location.href = '/login';
   });
 })

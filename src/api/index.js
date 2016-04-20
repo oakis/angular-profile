@@ -28,7 +28,7 @@ router.post('/authenticate', function(req, res) {
           });
           res.json({ success: true, message: 'Authentication success.', token: token });
         } else {
-          res.send({ success: false, message: 'Authentication failed. Passwords did not match.' });
+          res.json({ success: false, message: 'Authentication failed. Passwords did not match.' });
         }
       });
     }
@@ -64,10 +64,8 @@ router.use(function(req, res, next) {
     // verifies secret and checks exp
     jwt.verify(token, config.secret, function(err, decoded) {      
       if (err) {
-        return res.json({ success: false, message: 'Failed to authenticate token.' });    
+        return res.json({ success: false, message: 'Failed to authenticate token.' });
       } else {
-        // if everything is good, save to request for use in other routes
-        req.decoded = decoded;
         next();
       }
     });
@@ -89,7 +87,6 @@ router.get('/', function(req, res) {
 });
 
 router.get('/users', function(req, res) {
-  console.log(req.decoded);
   User.find({}, function(err, users) {
     res.json(users);
   });
@@ -100,10 +97,9 @@ router.get('/profile/:username', function(req,res,next){
 			if(err) {
 				return console.error('Error: ' + err);
 			} else {
-				console.log(data);
 				res.json(data);
 			}
-		});
+	});
 })
 
 module.exports = router;
