@@ -10,12 +10,13 @@ var UserSchema = new Schema({
     }, 
     email: {
     	type: String,
-    	required: true
+    	required: true,
+        unique: true
     },
     role: {
     	type: String,
-    	enum: ['student','admin','company','sponsor','teacher'], // set available account types
-    	default: 'student' // default to student
+    	enum: ['student','admin','company','sponsor','teacher','needAccept'], // set available account types
+    	default: 'needAccept' // default to needAccept
     },
     firstname: String,
     surename: String,
