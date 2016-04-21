@@ -15,6 +15,18 @@
 			<a href="/admin/users">Users</a> <a href="/admin/posts">Posts</a>
 		</nav>
 	</header>
+	<div class="frame" ng-show="editFrame">
+		<p>Editing profile for user {{edit.username}}</p>
+		<input type="text" ng-model="edit.firstname" value="edit.firstname">
+		<input type="text" ng-model="edit.surename" value="edit.surename">
+		<input type="text" ng-model="edit.email" value="edit.email">
+		<input type="text" ng-model="edit.class" value="edit.class">
+		<input type="text" ng-model="edit.school" value="edit.school">
+		<input type="text" ng-model="edit.city" value="edit.city">
+		<input type="text" ng-model="edit.skills" value="edit.skills">
+		<button ng-click="saveUser()">Save</button>
+	</div>
+	<div class="message" ng-model="message">{{message}}</div>
 	<div class="container">
 		<table id="admin-users">
 			<tr ng-repeat="user in users">

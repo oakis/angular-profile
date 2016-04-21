@@ -115,6 +115,11 @@ app.controller('showProfile', function($scope,$http,$window){
 })
 
 app.controller('adminUsers', function($scope,$http){
+
+$scope.edit;
+$scope.editFrame = false;
+	
+	// GET all users
 	$http({
 		method: 'get',
 		url: '/api/users'
@@ -123,4 +128,28 @@ app.controller('adminUsers', function($scope,$http){
   }, function (response) {
     console.log(response);
   });
+
+	$scope.editUser = function () {
+		$scope.edit = this.user; // populate edit with clicked user
+		$scope.editFrame = true; // show edit frame
+		console.log(this.user);
+	}
+
+	$scope.saveUser = function () {
+		$http({
+			method: 'put',
+			url: '/api/users/'+$scope.edit._id,
+			data: this.edit
+		}).then(function (response) {
+	    $scope.message = response.data.message;
+	    $scope.edit = null; // clear edit
+			$scope.editFrame = false; // hide edit frame
+			console.log($scope.message);
+	  }, function (response) {
+	    console.log(response);
+	    $scope.message = response.data.message;
+	    console.log($scope.message);
+	  });
+	}
+
 })

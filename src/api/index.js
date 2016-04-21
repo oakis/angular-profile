@@ -98,6 +98,31 @@ router.get('/users', function(req, res) {
   });
 });
 
+// Save user
+router.put('/users/:id', function(req,res) {
+  User.findOne({ _id: req.params.id }, function(err, user) {
+    if (user) {
+      User.update(
+        { _id: req.params.id },
+        { $set: {
+            email: req.body.email,
+            firstname: req.body.firstname,
+            surename: req.body.surename,
+            class: req.body.class,
+            school: req.body.school,
+            city: req.body.city,
+            skills: req.body.skills
+          }
+        }, function (err, updated) {
+          if (err) console.log(err);
+          else res.json({ success: true, message: 'Successfully updated user with id: '+req.params.id })
+      });
+    } else {
+      res.json({ success: false, message: 'No such user with id: '+req.params.id });
+    };
+  });
+})
+
 // GET all posts
 router.get('/posts', function(req, res){
   Posts.find({}, function(err, posts) {
