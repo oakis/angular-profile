@@ -90,7 +90,6 @@ app.controller('register', function($scope,$http,$window){
 		    	$scope.message = response.data.message;
 		    } else {
 		    	$scope.show = false;
-		    	$scope.message = response.data.message;
 		    }
 		  }, function (response) {
 		    console.log(response);
@@ -112,5 +111,16 @@ app.controller('showProfile', function($scope,$http,$window){
   }, function (response) {
     console.log(response);
     //$window.location.href = '/login';
+  });
+})
+
+app.controller('adminUsers', function($scope,$http){
+	$http({
+		method: 'get',
+		url: '/api/users'
+	}).then(function (response) {
+    $scope.users = response.data;
+  }, function (response) {
+    console.log(response);
   });
 })

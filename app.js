@@ -21,17 +21,32 @@ app.use(cookieParser());
 
 app.use('/api', router);
 
-// Files
+// HTML-files
 var index 		= './index.html',
 		profile 	= './profile.html',
 		register	= './register.html',
-		login			= './login.html';
+		login			= './login.html',
+		admin			= './admin.html',
+		adminPosts=	'./admin/posts.html',
+		adminUsers=	'./admin/users.html';
 
-// File options
+// HTML-files options
 var options 	= { root: './public' };
 
 app.get('/', function(req, res) {
     res.sendFile(index,options);
+});
+
+app.get('/admin', function(req, res) {
+    res.sendFile(admin,options);
+});
+
+app.get('/admin/users', function(req, res) {
+    res.sendFile(adminUsers,options);
+});
+
+app.get('/admin/posts', function(req, res) {
+    res.sendFile(adminPosts,options);
 });
 
 app.get('/register', function(req, res) {

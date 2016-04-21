@@ -82,16 +82,34 @@ router.use(function(req, res, next) {
   }
 });
 
+// API BASE
 router.get('/', function(req, res) {
   res.json({ message: 'Welcome to the coolest API on earth!' });
 });
 
+// ###################### //
+// ###  ADMIN  STUFF  ### //
+// ###################### //
+
+// GET all users
 router.get('/users', function(req, res) {
   User.find({}, function(err, users) {
     res.json(users);
   });
 });
 
+// GET all posts
+router.get('/posts', function(req, res){
+  Posts.find({}, function(err, posts) {
+    res.json(posts);
+  });
+})
+
+// ###################### //
+// ### LOGGED IN USER ### //
+// ###################### //
+
+// Show user profile
 router.get('/profile/:username', function(req,res,next){
 	User.findOne({ username: req.params.username }, 'username firstname surename email class school city skills role' , function(err, data){
 			if(err) {
