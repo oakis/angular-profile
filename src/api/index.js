@@ -26,7 +26,7 @@ router.post('/authenticate', function(req, res) {
           var token = jwt.sign(user, config.secret, {
             expiresIn: 10080 // in seconds
           });
-          res.json({ success: true, message: 'Authentication success.', token: token });
+          res.json({ success: true, message: 'Authentication success.', token: token, role: user.role });
         } else {
           res.json({ success: false, message: 'Authentication failed. Passwords did not match.' });
         }
@@ -56,7 +56,7 @@ router.post('/register', function(req,res){
 router.use(function(req, res, next) {
 
   // check header or url parameters or post parameters for token
-  var token = req.body.token || req.query.token || req.headers['x-access-token'];
+  var token = req.headers['x-access-token'];
 
   // decode token
   if (token) {
@@ -88,8 +88,37 @@ router.get('/', function(req, res) {
 });
 
 // ###################### //
+// ### LOGGED IN USER ### //
+// ###################### //
+
+// Show user profile
+router.get('/profile/:username', function(req,res,next){
+  User.findOne({ username: req.params.username }, 'username firstname surename email class school city skills role' , function(err, data){
+      if(err) {
+        return console.error('Error: ' + err);
+      } else {
+        res.json(data);
+      }
+  });
+})
+
+module.exports = router;
+
+// ###################### //
 // ###  ADMIN  STUFF  ### //
 // ###################### //
+
+// Check if admin
+router.use(function(req, res, next) {
+  var role = req.headers['role'];
+
+  if (role == 'admin') {
+    next(); // allow access to admin-pages
+  } else {
+    // redirect to login
+  }
+
+});
 
 // GET all users
 router.get('/users', function(req, res) {
@@ -123,26 +152,17 @@ router.put('/users/:id', function(req,res) {
   });
 })
 
+// Delete user
+router.delete('/users/:id', function(req,res) {
+  User.remove({ _id: req.params.id }, function (err, user) {
+    if (err) return err;
+    else res.json({ success: true, message: 'User with id '+req.params.id+' was successfully removed.'});
+  });
+})
+
 // GET all posts
 router.get('/posts', function(req, res){
   Posts.find({}, function(err, posts) {
     res.json(posts);
   });
 })
-
-// ###################### //
-// ### LOGGED IN USER ### //
-// ###################### //
-
-// Show user profile
-router.get('/profile/:username', function(req,res,next){
-	User.findOne({ username: req.params.username }, 'username firstname surename email class school city skills role' , function(err, data){
-			if(err) {
-				return console.error('Error: ' + err);
-			} else {
-				res.json(data);
-			}
-	});
-})
-
-module.exports = router;

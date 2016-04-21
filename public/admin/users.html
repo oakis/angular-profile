@@ -32,6 +32,7 @@
 			<tr ng-repeat="user in users">
 				<td>{{user.username}}</td>
 				<td><button ng-click="editUser()">Edit</button></td>
+				<td><button ng-click="deleteUser(user._id)">Delete</button></td>
 			</tr>
 		</table>
 	</div>

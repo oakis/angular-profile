@@ -6,6 +6,7 @@ app.factory('AuthInterceptor', function ($window, $q) {
             config.headers = config.headers || {};
             if ($window.sessionStorage.getItem('token')) {
                 config.headers['x-access-token'] = $window.sessionStorage.getItem('token');
+                config.headers['role'] = $window.sessionStorage.getItem('role');
             }
             return config || $q.when(config);
         },
@@ -49,6 +50,7 @@ app.controller('login', function($scope,$http,$window){
 	    	$window.location.href = 'profile/'+$scope.username;
 	    	$scope.success = true;
 	    	$window.sessionStorage.setItem('token', response.data.token);
+	    	$window.sessionStorage.setItem('role', response.data.role);
 	    } else {
 	    	$scope.success = false;
 	    	$scope.message = response.data.message;
@@ -118,6 +120,7 @@ app.controller('adminUsers', function($scope,$http){
 
 $scope.edit;
 $scope.editFrame = false;
+$scope.users;
 	
 	// GET all users
 	$http({
@@ -130,6 +133,7 @@ $scope.editFrame = false;
   });
 
 	$scope.editUser = function () {
+		$scope.message = null;
 		$scope.edit = this.user; // populate edit with clicked user
 		$scope.editFrame = true; // show edit frame
 		console.log(this.user);
@@ -150,6 +154,24 @@ $scope.editFrame = false;
 	    $scope.message = response.data.message;
 	    console.log($scope.message);
 	  });
+	}
+
+	$scope.deleteUser = function (id) {
+		if (window.confirm('Do you really want to delete user with '+id+'?')) {
+			$http({
+				method: 'delete',
+				url: '/api/users/'+id
+			}).then(function (response) {
+		    $scope.message = response.data.message;
+		    $scope.edit = null; // clear edit
+				$scope.editFrame = false; // hide edit frame
+				console.log($scope.message);
+		  }, function (response) {
+		    console.log(response);
+		    $scope.message = response.data.message;
+		    console.log($scope.message);
+		  });
+		}
 	}
 
 })
