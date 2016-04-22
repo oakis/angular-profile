@@ -8,33 +8,54 @@
 </head>
 <body ng-app="profile" ng-controller="adminUsers">
 	<header>
-		<nav>
-			<a href="/">Home</a> <a href="/login">Login</a> <a href="/register">Register</a>
-		</nav>
-		<nav>
-			<a href="/admin/users">Users</a> <a href="/admin/posts">Posts</a>
-		</nav>
+		<nav class="user-nav" user-menu ng-show="loggedIn"></nav>
+		<div class="user-login" ng-show="loggedIn">Logged in as {{userLogin}}</div>
+		<nav class="admin-nav" admin-menu ng-show="role===admin"></nav>
 	</header>
-	<div class="frame" ng-show="editFrame">
-		<p>Editing profile for user {{edit.username}}</p>
-		<input type="text" ng-model="edit.firstname" value="edit.firstname">
-		<input type="text" ng-model="edit.surename" value="edit.surename">
-		<input type="text" ng-model="edit.email" value="edit.email">
-		<input type="text" ng-model="edit.class" value="edit.class">
-		<input type="text" ng-model="edit.school" value="edit.school">
-		<input type="text" ng-model="edit.city" value="edit.city">
-		<input type="text" ng-model="edit.skills" value="edit.skills">
-		<button ng-click="saveUser()">Save</button>
-	</div>
-	<div class="message" ng-model="message">{{message}}</div>
 	<div class="container">
-		<table id="admin-users">
-			<tr ng-repeat="user in users">
-				<td>{{user.username}}</td>
-				<td><button ng-click="editUser()">Edit</button></td>
-				<td><button ng-click="deleteUser(user._id)">Delete</button></td>
-			</tr>
-		</table>
+		<div class="inner" ng-show="editFrame">
+			<p>Editing profile for user {{edit.username}}</p>
+			<label>Firstname:</label>
+			<input type="text" ng-model="edit.firstname" value="edit.firstname">
+			<label>Surename:</label>
+			<input type="text" ng-model="edit.surename" value="edit.surename">
+			<label>Email:</label>
+			<input type="text" ng-model="edit.email" value="edit.email">
+			<label>Class:</label>
+			<input type="text" ng-model="edit.class" value="edit.class">
+			<label>School:</label>
+			<input type="text" ng-model="edit.school" value="edit.school">
+			<label>City:</label>
+			<input type="text" ng-model="edit.city" value="edit.city">
+			<label>Skills:</label>
+			<input type="text" ng-model="edit.skills" value="edit.skills">
+			<button class="cta "ng-click="saveUser()">Save</button>
+		</div>
+	</div>
+	<div class="message" ng-model="message" ng-hide="hide">{{message}}</div>
+	<div class="container">
+		<div class="inner">
+			<div class="sort">
+				<button ng-click="sort('A-E')">A-E</button>
+				<button ng-click="sort('F-J')">F-J</button>
+				<button ng-click="sort('K-O')">K-O</button>
+				<button ng-click="sort('P-T')">P-T</button>
+				<button ng-click="sort('U-Z')">U-Z</button>
+			</div>
+			<div class="search">
+				<input type="text" ng-model="search">
+				<button ng-click="sort(search)">Search</button>
+			</div>
+		</div>
+		<div class="inner">
+			<table id="admin-users">
+				<tr ng-repeat="user in users">
+					<td>{{user.username}}</td>
+					<td><button ng-click="editUser()" class="cta">Edit</button></td>
+					<td><button ng-click="deleteUser(user._id)" class="warning">Delete</button></td>
+				</tr>
+			</table>
+		</div>
 	</div>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>

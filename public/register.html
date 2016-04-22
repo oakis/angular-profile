@@ -13,13 +13,20 @@
 		</nav>
 	</header>
 	<div class="container" ng-controller="register">
-		<input type="text" ng-model="username" placeholder="username">
-		<input type="text" ng-model="email" placeholder="email">
-		<input type="text" ng-model="email2">
-		<input type="password" ng-model="password" placeholder="password">
-		<input type="password" ng-model="password2">
-		<button ng-click="doRegister()">Register</button>
-		<p ng-hide="hide">{{message}}</p>
+		<div class="inner">
+			<label>Username: <span class="required">*</span></label>
+			<input type="text" ng-model="username">
+			<label>Email: <span class="required">*</span></label>
+			<input type="text" ng-model="email">
+			<label>Email (again): <span class="required">*</span></label>
+			<input type="text" ng-model="email2">
+			<label>Password: <span class="required">*</span></label>
+			<input type="password" ng-model="password">
+			<label>Password (again): <span class="required">*</span></label>
+			<input type="password" ng-model="password2">
+			<button ng-click="doRegister()">Register</button>
+		</div>
+		<div ng-hide="hide" class="message">{{message}}</div>
 	</div>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>

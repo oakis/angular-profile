@@ -5,8 +5,7 @@ app.factory('AuthInterceptor', function ($window, $q) {
         request: function(config) {
             config.headers = config.headers || {};
             if ($window.sessionStorage.getItem('token')) {
-                config.headers['x-access-token'] = $window.sessionStorage.getItem('token');
-                config.headers['role'] = $window.sessionStorage.getItem('role');
+                config.headers['x-access-token'] = $window.sessionStorage.getItem('token'); // save token for pages which needs auth
             }
             return config || $q.when(config);
         },
@@ -24,9 +23,21 @@ app.config(function ($httpProvider) {
     $httpProvider.interceptors.push('AuthInterceptor');
 });
 
+app.directive('userMenu', function() {
+  return {
+    template: '<a href="/">Home</a> <a href="/login">Login</a> <a href="/register">Register</a>'
+  };
+});
+
+app.directive('adminMenu', function() {
+  return {
+    template: '<a href="/admin/users">Users</a> <a href="/admin/posts">Posts</a>'
+  };
+});
+
 app.controller('login', function($scope,$http,$window){
 
-	$scope.success = true;
+	$scope.hide = true;
 	$scope.message = '';
 	
 	$scope.doLogin = function () {
@@ -48,11 +59,16 @@ app.controller('login', function($scope,$http,$window){
 		}).then(function (response) {
 	    if (response.data.success) {
 	    	$window.location.href = 'profile/'+$scope.username;
-	    	$scope.success = true;
 	    	$window.sessionStorage.setItem('token', response.data.token);
-	    	$window.sessionStorage.setItem('role', response.data.role);
+	    	if (response.data.role == 'admin') {
+	    		sessionStorage.admin = true;
+	    	} else {
+	    		sessionStorage.admin = false;
+	    	}
+	    	sessionStorage.loggedIn = true;
+	    	sessionStorage.userLogin = response.data.userLogin;
 	    } else {
-	    	$scope.success = false;
+	    	$scope.hide = false;
 	    	$scope.message = response.data.message;
 	    }
 	  }, function (response) {
@@ -112,11 +128,13 @@ app.controller('showProfile', function($scope,$http,$window){
   });
 })
 
-app.controller('adminUsers', function($scope,$http,$window){
+app.controller('adminUsers', function($scope,$http,$window,$timeout){
 
 $scope.edit;
 $scope.editFrame = false;
 $scope.users;
+$scope.message;
+$scope.hide = true;
 	
 	// GET all users
 	$http({
@@ -149,10 +167,13 @@ $scope.users;
 	    $scope.message = response.data.message;
 	    $scope.edit = null; // clear edit
 			$scope.editFrame = false; // hide edit frame
+			$scope.hide = false; // show message
+			$timeout(function() { $scope.hide = true }, 3000); // hide message after 3 seconds
 			console.log($scope.message);
 	  }, function (response) {
 	    console.log(response);
 	    $scope.message = response.data.message;
+	    $scope.hide = false; // show message
 	    console.log($scope.message);
 	  });
 	}
@@ -164,14 +185,30 @@ $scope.users;
 				url: '/api/users/'+id
 			}).then(function (response) {
 		    $scope.message = response.data.message;
+		    $scope.hide = false; // show message
+		    $timeout(function() { $scope.hide = true }, 3000); // hide message after 3 seconds
 		    console.log($scope.users.indexOf(id));
 		    //$scope.users.splice($scope.users.indexOf(id),1)
 				console.log($scope.message);
 		  }, function (response) {
 		    $scope.message = response.data.message;
+		    $scope.hide = false; // show message
 		    console.log($scope.message);
 		  });
 		}
+	}
+
+	$scope.sort = function (regex) {
+		$http({
+			method: 'get',
+			url: '/api/users/'+regex
+		}).then(function (response) {
+	    $scope.users = response.data;
+	  }, function (response) {
+	    $scope.message = response.data.message;
+	    $scope.hide = false; // show message
+	    console.log($scope.message);
+	  });
 	}
 
 })

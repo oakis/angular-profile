@@ -26,7 +26,7 @@ router.post('/authenticate', function(req, res) {
           var token = jwt.sign(user, config.secret, {
             expiresIn: 10080 // in seconds
           });
-          res.json({ success: true, message: 'Authentication success.', token: token, role: user.role });
+          res.json({ success: true, message: 'Authentication success.', token: token, role: user.role, loggedIn: true, userLogin: user.username });
         } else {
           res.json({ success: false, message: 'Authentication failed. Passwords did not match.' });
         }
@@ -36,21 +36,26 @@ router.post('/authenticate', function(req, res) {
 });
 
 router.post('/register', function(req,res){
-	// check db for username
-  User.findOne({ $or: [ { username: req.body.username },{ email: req.body.email } ] }, function(err, user) {
-    if (err) throw err;
-    if (!user) { // if user doesn't exist, register
-    	User.create(req.body ,function(err){
-    		if (err) {
-    			throw err;
-    		} else {
-    			res.json({ success: true, message: 'Successfully created new user.' });
-    		}
-    	})
-    } else if (user) { // if user already exists, abort
-    	res.json({ success: false, message: 'Username or E-mail is already registered.'});
-    }
-  });
+  // check if all fields are filled in
+  if (req.body.username!=undefined || req.body.password!=undefined || req.body.email!=undefined) {
+  	// check db for username
+    User.findOne({ $or: [ { username: req.body.username },{ email: req.body.email } ] }, function(err, user) {
+      if (err) throw err;
+      if (!user) { // if user doesn't exist, register
+      	User.create(req.body ,function(err){
+      		if (err) {
+      			throw err;
+      		} else {
+      			res.json({ success: true, message: 'Successfully created new user.' });
+      		}
+      	})
+      } else if (user) { // if user already exists, abort
+      	res.json({ success: false, message: 'Username or E-mail is already registered.'});
+      }
+    });
+  } else {
+    res.json({ success: false, message: 'All fields with a <span class="required">*</span> must be filled in.' });
+  }
 })
 
 router.use(function(req, res, next) {
@@ -122,6 +127,12 @@ router.get('/users', function(req, res, next) {
     res.json(users);
   });
 });
+
+router.get('/users/:search', function(req, res, next) {
+  User.find({ username: new RegExp('^['+req.params.search+']', "i") }, function(err, users) {
+    res.json(users);
+  });
+})
 
 // Save user
 router.put('/users/:id', function(req, res, next) {
