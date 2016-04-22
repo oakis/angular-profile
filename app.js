@@ -1,14 +1,14 @@
-var express				= require('express');
-var parser  		  = require('body-parser');
-var router				= require('./src/api/index.js');
-var morgan				= require('morgan');
-var mongoose			= require('mongoose');
-var cookieParser 	= require('cookie-parser');
+var express	= require('express');
+var parser = require('body-parser');
+var router = require('./src/api/index.js');
+var morgan = require('morgan');
+var mongoose = require('mongoose');
+var cookieParser = require('cookie-parser');
 
 var app = express();
 
-var config 	= require('./config');
-var port 	 = process.env.PORT || 3000;
+var config = require('./config');
+var port = process.env.PORT || 3000;
 
 // Connect to db
 mongoose.connect(config.database);
@@ -23,30 +23,18 @@ app.use('/api', router);
 
 // HTML-files
 var index 		= './index.html',
-		profile 	= './profile.html',
-		register	= './register.html',
-		login			= './login.html',
-		admin			= './admin.html',
-		adminPosts=	'./admin/posts.html',
-		adminUsers=	'./admin/users.html';
+	profile 	= './profile.html',
+	register	= './register.html',
+	login		= './login.html',
+	admin		= './admin.html',
+	adminPosts  = './admin/posts.html',
+	adminUsers  = './admin/users.html';
 
 // HTML-files options
 var options 	= { root: './public' };
 
 app.get('/', function(req, res) {
     res.sendFile(index,options);
-});
-
-app.get('/admin', function(req, res) {
-    res.sendFile(admin,options);
-});
-
-app.get('/admin/users', function(req, res) {
-    res.sendFile(adminUsers,options);
-});
-
-app.get('/admin/posts', function(req, res) {
-    res.sendFile(adminPosts,options);
 });
 
 app.get('/register', function(req, res) {
@@ -59,6 +47,18 @@ app.get('/login', function(req, res) {
 
 app.get('/profile/:username', function(req, res) {
     res.sendFile(profile,options);
+});
+
+app.get('/admin', function(req, res) {
+    res.sendFile(admin,options);
+});
+
+app.get('/admin/users', function(req, res) {
+    res.sendFile(adminUsers,options);
+});
+
+app.get('/admin/posts', function(req, res) {
+    res.sendFile(adminPosts,options);
 });
 
 app.listen(port, function() {

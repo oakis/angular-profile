@@ -64,7 +64,7 @@ app.controller('login', function($scope,$http,$window){
 
 app.controller('register', function($scope,$http,$window){
 
-	$scope.show = true;
+	$scope.hide = true;
 	$scope.message = '';
 	
 	$scope.doRegister = function () {
@@ -87,17 +87,13 @@ app.controller('register', function($scope,$http,$window){
 	        return str.join("&");
 	    	}
 			}).then(function (response) {
-		    if (response.data.success) {
-		    	$scope.show = true;
-		    	$scope.message = response.data.message;
-		    } else {
-		    	$scope.show = false;
-		    }
+		    $scope.hide = false;
+		    $scope.message = response.data.message;
 		  }, function (response) {
 		    console.log(response);
 		  });
 		} else {
-			$scope.success = false;
+			$scope.hide = false;
 			$scope.message = 'Passwords does not match!';
 		}
 	}
@@ -116,7 +112,7 @@ app.controller('showProfile', function($scope,$http,$window){
   });
 })
 
-app.controller('adminUsers', function($scope,$http){
+app.controller('adminUsers', function($scope,$http,$window){
 
 $scope.edit;
 $scope.editFrame = false;
@@ -127,7 +123,12 @@ $scope.users;
 		method: 'get',
 		url: '/api/users'
 	}).then(function (response) {
-    $scope.users = response.data;
+		if (response.data.success === false) {
+    	window.alert(response.data.message); // if fail, show error message and redirect to front page.
+			$window.location.href = '/';
+		} else {
+			$scope.users = response.data; // if success, populate $scope.users with users from db.
+		}
   }, function (response) {
     console.log(response);
   });
@@ -163,11 +164,10 @@ $scope.users;
 				url: '/api/users/'+id
 			}).then(function (response) {
 		    $scope.message = response.data.message;
-		    $scope.edit = null; // clear edit
-				$scope.editFrame = false; // hide edit frame
+		    console.log($scope.users.indexOf(id));
+		    //$scope.users.splice($scope.users.indexOf(id),1)
 				console.log($scope.message);
 		  }, function (response) {
-		    console.log(response);
 		    $scope.message = response.data.message;
 		    console.log($scope.message);
 		  });

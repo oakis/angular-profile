@@ -67,6 +67,7 @@ router.use(function(req, res, next) {
         return res.json({ success: false, message: 'Failed to authenticate token.' });
       } else {
         next();
+        console.log('Logged in, running next()')
       }
     });
 
@@ -80,11 +81,6 @@ router.use(function(req, res, next) {
     });
     
   }
-});
-
-// API BASE
-router.get('/', function(req, res) {
-  res.json({ message: 'Welcome to the coolest API on earth!' });
 });
 
 // ###################### //
@@ -115,20 +111,20 @@ router.use(function(req, res, next) {
   if (role == 'admin') {
     next(); // allow access to admin-pages
   } else {
-    // redirect to login
+    res.json({ success: false, message: 'You need to be an administrator to access this page.' });
   }
 
 });
 
 // GET all users
-router.get('/users', function(req, res) {
+router.get('/users', function(req, res, next) {
   User.find({}, function(err, users) {
     res.json(users);
   });
 });
 
 // Save user
-router.put('/users/:id', function(req,res) {
+router.put('/users/:id', function(req, res, next) {
   User.findOne({ _id: req.params.id }, function(err, user) {
     if (user) {
       User.update(
@@ -153,7 +149,7 @@ router.put('/users/:id', function(req,res) {
 })
 
 // Delete user
-router.delete('/users/:id', function(req,res) {
+router.delete('/users/:id', function(req, res, next) {
   User.remove({ _id: req.params.id }, function (err, user) {
     if (err) return err;
     else res.json({ success: true, message: 'User with id '+req.params.id+' was successfully removed.'});
@@ -161,7 +157,7 @@ router.delete('/users/:id', function(req,res) {
 })
 
 // GET all posts
-router.get('/posts', function(req, res){
+router.get('/posts', function(req, res, next){
   Posts.find({}, function(err, posts) {
     res.json(posts);
   });
