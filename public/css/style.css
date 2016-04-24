@@ -76,6 +76,24 @@ button.warning {
 	background: #faa;
 }
 
+table {
+	border-spacing: 0;
+}
+
+thead th {
+	background: none;
+}
+
+tbody:nth-child(even) td {
+	background: #ddd;
+	border-radius: 3px;
+}
+
+th,
+td {
+	padding: 3px 15px;
+}
+
 .container {
 	display: flex;
 	justify-content: center;
@@ -89,6 +107,10 @@ button.warning {
 
 .inner {
 
+}
+
+.center {
+	text-align: center;
 }
 
 .row {

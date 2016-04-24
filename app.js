@@ -26,9 +26,10 @@ var index 		= './index.html',
 	profile 	= './profile.html',
 	register	= './register.html',
 	login		= './login.html',
+    logout      = './logout.html',
 	admin		= './admin.html',
-	adminPosts  = './admin/posts.html',
-	adminUsers  = './admin/users.html';
+	adminPosts  = './admin.posts.html',
+	adminUsers  = './admin.users.html';
 
 // HTML-files options
 var options 	= { root: './public' };
@@ -43,6 +44,10 @@ app.get('/register', function(req, res) {
 
 app.get('/login', function(req, res) {
     res.sendFile(login,options);
+});
+
+app.get('/logout', function(req, res) {
+    res.sendFile(logout,options);
 });
 
 app.get('/profile/:username', function(req, res) {

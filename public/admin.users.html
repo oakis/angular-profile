@@ -7,13 +7,9 @@
 	<title>Administration</title>
 </head>
 <body ng-app="profile" ng-controller="adminUsers">
-	<header>
-		<nav class="user-nav" user-menu ng-show="loggedIn"></nav>
-		<div class="user-login" ng-show="loggedIn">Logged in as {{userLogin}}</div>
-		<nav class="admin-nav" admin-menu ng-show="role===admin"></nav>
-	</header>
+	<header ng-include="'../templates/menu.html'"></header>
 	<div class="container">
-		<div class="inner" ng-show="editFrame">
+		<div class="inner" ng-show="editFrame" id="editFrame">
 			<p>Editing profile for user {{edit.username}}</p>
 			<label>Firstname:</label>
 			<input type="text" ng-model="edit.firstname" value="edit.firstname">
@@ -21,6 +17,15 @@
 			<input type="text" ng-model="edit.surename" value="edit.surename">
 			<label>Email:</label>
 			<input type="text" ng-model="edit.email" value="edit.email">
+			<label>Role:</label>
+			<select ng-model="edit.role">
+				<option>needAccept</option>
+				<option>student</option>
+				<option>company</option>
+				<option>sponsor</option>
+				<option>teacher</option>
+				<option>admin</option>
+			</select>
 			<label>Class:</label>
 			<input type="text" ng-model="edit.class" value="edit.class">
 			<label>School:</label>
@@ -29,10 +34,14 @@
 			<input type="text" ng-model="edit.city" value="edit.city">
 			<label>Skills:</label>
 			<input type="text" ng-model="edit.skills" value="edit.skills">
-			<button class="cta "ng-click="saveUser()">Save</button>
+			<button class="cta" ng-click="saveUser()">Save</button>
+			<button ng-click="editFrame = false">Cancel</button>
 		</div>
 	</div>
 	<div class="message" ng-model="message" ng-hide="hide">{{message}}</div>
+	<div class="container">
+		<div class="inner center" ng-model="needAccept">{{needAccept}} {{needAcceptMsg}}</div>
+	</div>
 	<div class="container">
 		<div class="inner">
 			<div class="sort">
@@ -49,16 +58,26 @@
 		</div>
 		<div class="inner">
 			<table id="admin-users">
-				<tr ng-repeat="user in users">
-					<td>{{user.username}}</td>
-					<td><button ng-click="editUser()" class="cta">Edit</button></td>
-					<td><button ng-click="deleteUser(user._id)" class="warning">Delete</button></td>
-				</tr>
+				<thead>
+					<th>Username</th>
+					<th>Email</th>
+					<th>Role</th>
+				</thead>
+				<tbody ng-repeat="user in users">
+					<tr>
+						<td>{{user.username}}</td>
+						<td>{{user.email}}</td>
+						<td>{{user.role}}</td>
+						<td><button ng-click="editUser()" class="cta edit-button">Edit</button></td>
+						<td><button ng-click="deleteUser(user._id,$index)" class="warning">Delete</button></td>
+					</tr>
+				</tbody>
 			</table>
 		</div>
 	</div>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-cookies.js"></script>
 <script src="../js/app.js"></script>
+<script src="../js/directives.js"></script>
 </body>
 </html>

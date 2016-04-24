@@ -7,11 +7,7 @@
 	<title>Profile</title>
 </head>
 <body ng-app="profile" ng-controller="showProfile">
-	<header>
-		<nav class="user-nav" user-menu></nav>
-		<div class="user-login">Logged in as {{userLogin}}</div>
-		<nav class="admin-nav" admin-menu></nav>
-	</header>
+	<header main-menu></header>
 	<div class="container">
 		<div class="row">
 			<div class="profile-header">
@@ -42,7 +38,8 @@
 		</div>
 	</div>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-cookies.js"></script>
 <script src="../js/app.js"></script>
+<script src="../js/directives.js"></script>
 </body>
 </html>

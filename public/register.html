@@ -7,29 +7,28 @@
 	<title>Register</title>
 </head>
 <body ng-app="profile">
-	<header>
-		<nav>
-			<a href="/">Home</a> <a href="/login">Login</a> <a href="/register">Register</a>
-		</nav>
-	</header>
+	<header main-menu></header>
 	<div class="container" ng-controller="register">
 		<div class="inner">
+		<form name="register" id="register">
 			<label>Username: <span class="required">*</span></label>
-			<input type="text" ng-model="username">
+			<input type="text" ng-model="username" required>
 			<label>Email: <span class="required">*</span></label>
-			<input type="text" ng-model="email">
+			<input type="text" ng-model="email" required>
 			<label>Email (again): <span class="required">*</span></label>
-			<input type="text" ng-model="email2">
+			<input type="text" ng-model="email2" required>
 			<label>Password: <span class="required">*</span></label>
-			<input type="password" ng-model="password">
+			<input type="password" ng-model="password" required>
 			<label>Password (again): <span class="required">*</span></label>
-			<input type="password" ng-model="password2">
-			<button ng-click="doRegister()">Register</button>
+			<input type="password" ng-model="password2" required>
+			<button ng-click="register.$valid && doRegister()" class="cta">Register</button>
+		</form>
 		</div>
 		<div ng-hide="hide" class="message">{{message}}</div>
 	</div>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-cookies.js"></script>
 <script src="js/app.js"></script>
+<script src="js/directives.js"></script>
 </body>
 </html>

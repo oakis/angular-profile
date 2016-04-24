@@ -1,0 +1,4 @@
+<nav class="nav" menu ng-if="!loggedIn"></nav>
+<nav class="user-nav" user-menu ng-if="loggedIn"></nav>
+<div class="user-login" ng-if="loggedIn">Logged in as {{userLogin}}</div>
+<nav class="admin-nav" admin-menu ng-if="admin"></nav>

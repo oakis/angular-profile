@@ -26,7 +26,11 @@ router.post('/authenticate', function(req, res) {
           var token = jwt.sign(user, config.secret, {
             expiresIn: 10080 // in seconds
           });
-          res.json({ success: true, message: 'Authentication success.', token: token, role: user.role, loggedIn: true, userLogin: user.username });
+          if (user.role == 'needAccept') {
+            res.json({ success: false, message: 'An administrator must activate your account.' });
+          } else {
+            res.json({ success: true, message: 'Authentication success.', token: token, role: user.role, loggedIn: true, userLogin: user.username });
+          }
         } else {
           res.json({ success: false, message: 'Authentication failed. Passwords did not match.' });
         }
@@ -92,6 +96,17 @@ router.use(function(req, res, next) {
 // ### LOGGED IN USER ### //
 // ###################### //
 
+// Logout
+router.post('/logout', function (req, res) {
+  if (req.headers['x-access-token']) {
+      return res.status(200).json({
+          message: "User has been successfully logged out."
+      });
+  } else {
+      return res.json({ message: "You are already logged out."});
+  }
+})
+
 // Show user profile
 router.get('/profile/:username', function(req,res,next){
   User.findOne({ username: req.params.username }, 'username firstname surename email class school city skills role' , function(err, data){
@@ -102,8 +117,6 @@ router.get('/profile/:username', function(req,res,next){
       }
   });
 })
-
-module.exports = router;
 
 // ###################### //
 // ###  ADMIN  STUFF  ### //
@@ -147,7 +160,8 @@ router.put('/users/:id', function(req, res, next) {
             class: req.body.class,
             school: req.body.school,
             city: req.body.city,
-            skills: req.body.skills
+            skills: req.body.skills,
+            role: req.body.role
           }
         }, function (err, updated) {
           if (err) console.log(err);
@@ -173,3 +187,5 @@ router.get('/posts', function(req, res, next){
     res.json(posts);
   });
 })
+
+module.exports = router;

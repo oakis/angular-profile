@@ -1,4 +1,4 @@
-var app = angular.module('profile', []);
+var app = angular.module('profile', ['ngCookies']);
 
 app.factory('AuthInterceptor', function ($window, $q) {
     return {
@@ -6,6 +6,7 @@ app.factory('AuthInterceptor', function ($window, $q) {
             config.headers = config.headers || {};
             if ($window.sessionStorage.getItem('token')) {
                 config.headers['x-access-token'] = $window.sessionStorage.getItem('token'); // save token for pages which needs auth
+                config.headers['role'] = $window.sessionStorage.getItem('role');
             }
             return config || $q.when(config);
         },
@@ -23,19 +24,29 @@ app.config(function ($httpProvider) {
     $httpProvider.interceptors.push('AuthInterceptor');
 });
 
-app.directive('userMenu', function() {
-  return {
-    template: '<a href="/">Home</a> <a href="/login">Login</a> <a href="/register">Register</a>'
-  };
-});
+app.controller('logout', function($scope,$http,$cookies,$window,$timeout){
 
-app.directive('adminMenu', function() {
-  return {
-    template: '<a href="/admin/users">Users</a> <a href="/admin/posts">Posts</a>'
-  };
-});
+	$scope.hide = true;
+	$scope.message = '';
 
-app.controller('login', function($scope,$http,$window){
+	$http({
+		method: 'post',
+		url: '/api/logout'
+	}).then(function (response) {
+		delete $window.sessionStorage.token;
+		$cookies.remove('admin');
+		$cookies.remove('userLogin');
+		$cookies.remove('loggedIn');
+  	$scope.hide = false;
+  	$scope.message = response.data.message;
+  	$timeout(function() { $scope.hide = true }, 3000); // hide message after 3 seconds
+  }, function (response) {
+    console.log(response);
+  });
+
+})
+
+app.controller('login', function($scope,$http,$window,$cookies,$timeout){
 
 	$scope.hide = true;
 	$scope.message = '';
@@ -60,16 +71,18 @@ app.controller('login', function($scope,$http,$window){
 	    if (response.data.success) {
 	    	$window.location.href = 'profile/'+$scope.username;
 	    	$window.sessionStorage.setItem('token', response.data.token);
+	    	$window.sessionStorage.setItem('role', response.data.role);
 	    	if (response.data.role == 'admin') {
-	    		sessionStorage.admin = true;
+	    		$cookies.put('admin', true);
 	    	} else {
-	    		sessionStorage.admin = false;
+	    		$cookies.put('admin', false);
 	    	}
-	    	sessionStorage.loggedIn = true;
-	    	sessionStorage.userLogin = response.data.userLogin;
+	    	$cookies.put('loggedIn', true);
+	    	$cookies.put('userLogin', response.data.userLogin);
 	    } else {
 	    	$scope.hide = false;
 	    	$scope.message = response.data.message;
+	    	$timeout(function() { $scope.hide = true }, 3000); // hide message after 3 seconds
 	    }
 	  }, function (response) {
 	    console.log(response);
@@ -78,7 +91,7 @@ app.controller('login', function($scope,$http,$window){
 
 })
 
-app.controller('register', function($scope,$http,$window){
+app.controller('register', function($scope,$http,$window,$timeout){
 
 	$scope.hide = true;
 	$scope.message = '';
@@ -105,6 +118,8 @@ app.controller('register', function($scope,$http,$window){
 			}).then(function (response) {
 		    $scope.hide = false;
 		    $scope.message = response.data.message;
+		    $timeout(function() { $scope.hide = true }, 3000); // hide message after 3 seconds
+		    document.getElementById("register").reset();
 		  }, function (response) {
 		    console.log(response);
 		  });
@@ -116,25 +131,29 @@ app.controller('register', function($scope,$http,$window){
 
 })
 
-app.controller('showProfile', function($scope,$http,$window){
+app.controller('showProfile', function($scope,$http,$window,$cookies){
 	$http({
 		method: 'get',
 		url: '/api'+window.location.pathname
 	}).then(function (response) {
     $scope.user = response.data;
+    $scope.admin = ($cookies.get('admin') == 'true'); // if cookie is true set true, else set false
+    $scope.loggedIn = ($cookies.get('loggedIn') == 'true');
+    $scope.userLogin = $cookies.get('userLogin');
   }, function (response) {
     console.log(response);
     //$window.location.href = '/login';
   });
 })
 
-app.controller('adminUsers', function($scope,$http,$window,$timeout){
+app.controller('adminUsers', function($scope,$http,$window,$timeout,$cookies){
 
 $scope.edit;
 $scope.editFrame = false;
 $scope.users;
 $scope.message;
 $scope.hide = true;
+$scope.needAccept;
 	
 	// GET all users
 	$http({
@@ -146,6 +165,22 @@ $scope.hide = true;
 			$window.location.href = '/';
 		} else {
 			$scope.users = response.data; // if success, populate $scope.users with users from db.
+			$scope.admin = ($cookies.get('admin') == 'true'); // if cookie is true set true, else set false
+	    $scope.loggedIn = ($cookies.get('loggedIn') == 'true');
+	    $scope.userLogin = $cookies.get('userLogin');
+	    function getNeedAccept (user) {
+	    	if (user.role == 'needAccept') {
+	    		return true;
+	    	} else {
+	    		return false;
+	    	}
+	    }
+	    $scope.needAccept = $scope.users.filter(getNeedAccept).length;
+	    if ($scope.needAccept >= 2) {
+	    	$scope.needAcceptMsg = 'users are waiting to be accepted.';
+	    } else if ($scope.needAccept = 1) {
+	    	$scope.needAcceptMsg = 'user is waiting to be accepted.';
+	    }
 		}
   }, function (response) {
     console.log(response);
@@ -155,7 +190,6 @@ $scope.hide = true;
 		$scope.message = null;
 		$scope.edit = this.user; // populate edit with clicked user
 		$scope.editFrame = true; // show edit frame
-		console.log(this.user);
 	}
 
 	$scope.saveUser = function () {
@@ -169,16 +203,13 @@ $scope.hide = true;
 			$scope.editFrame = false; // hide edit frame
 			$scope.hide = false; // show message
 			$timeout(function() { $scope.hide = true }, 3000); // hide message after 3 seconds
-			console.log($scope.message);
 	  }, function (response) {
-	    console.log(response);
 	    $scope.message = response.data.message;
 	    $scope.hide = false; // show message
-	    console.log($scope.message);
 	  });
 	}
 
-	$scope.deleteUser = function (id) {
+	$scope.deleteUser = function (id,index) {
 		if (window.confirm('Do you really want to delete user with '+id+'?')) {
 			$http({
 				method: 'delete',
@@ -187,13 +218,11 @@ $scope.hide = true;
 		    $scope.message = response.data.message;
 		    $scope.hide = false; // show message
 		    $timeout(function() { $scope.hide = true }, 3000); // hide message after 3 seconds
-		    console.log($scope.users.indexOf(id));
-		    //$scope.users.splice($scope.users.indexOf(id),1)
-				console.log($scope.message);
+		    $scope.users.splice(index,1);
 		  }, function (response) {
 		    $scope.message = response.data.message;
 		    $scope.hide = false; // show message
-		    console.log($scope.message);
+		    $timeout(function() { $scope.hide = true }, 3000); // hide message after 3 seconds
 		  });
 		}
 	}
@@ -207,7 +236,6 @@ $scope.hide = true;
 	  }, function (response) {
 	    $scope.message = response.data.message;
 	    $scope.hide = false; // show message
-	    console.log($scope.message);
 	  });
 	}
 
