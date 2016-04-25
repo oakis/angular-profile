@@ -8,8 +8,8 @@
 </head>
 <body ng-app="profile" ng-controller="showProfile">
 	<header main-menu></header>
-	<div class="container">
-		<div class="inner" ng-show="editFrame" id="editFrame">
+	<div class="container" ng-if="editFrame">
+		<div class="inner" id="editFrame">
 			<p>Editing profile for user {{edit.username}}</p>
 			<label>Firstname:</label>
 			<input type="text" ng-model="edit.firstname" value="edit.firstname">
@@ -26,15 +26,15 @@
 			<label>Skills:</label>
 			<input type="text" ng-model="edit.skills" value="edit.skills">
 			<button class="cta" ng-click="saveUser()">Save</button>
-			<button ng-click="editFrame = false">Cancel</button>
+			<button ng-click="close()">Cancel</button>
 		</div>
-		<a href="" ng-if="isOwner" ng-hide="editFrame" ng-click="editUser()">[edit profile]</a>
 	</div>
 	<div class="message" ng-model="message" ng-hide="hide">{{message}}</div>
 	<div class="container">
 		<div class="row">
 			<div class="profile-header">
 				<h2 ng-model="user.username">{{user.username}}</h2>
+				<a href="" ng-if="isOwner" ng-hide="editFrame" ng-click="editUser()">[edit profile]</a>
 				<div class="profile-picture">
 					<img src="/images/{{user.username}}.jpg" alt="{{user.username}} profile picture">
 					<div class="profile-picture-overlay" ng-if="isOwner">

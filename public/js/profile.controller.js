@@ -1,4 +1,4 @@
-app.controller('showProfile', function($scope,$http,$window,$cookies,Upload,$timeout){
+app.controller('showProfile', function($scope,$http,$window,$cookies,Upload,$timeout,$anchorScroll){
 	$scope.edit;
 	$scope.editFrame = false;
 	$scope.users;
@@ -41,12 +41,10 @@ app.controller('showProfile', function($scope,$http,$window,$cookies,Upload,$tim
                 $scope.edit = null; // clear edit
                 $scope.editFrame = false; // hide edit frame
                 $scope.hide = false; // show message
-                $scope.needAccept = $scope.users.filter(getNeedAccept).length;
                 $timeout(function() { $scope.hide = true }, 3000); // hide message after 3 seconds
             } else {
                 $scope.message = response.data.message;
                 $scope.hide = false; // show message
-                $scope.needAccept = $scope.users.filter(getNeedAccept).length;
                 $timeout(function() { $scope.hide = true }, 3000); // hide message after 3 seconds
             }
       }, function (response) {
@@ -55,11 +53,15 @@ app.controller('showProfile', function($scope,$http,$window,$cookies,Upload,$tim
       });
     }
 
+    $scope.close = function () {
+        $scope.editFrame = false;
+    }
+
     // upload on file select or drop
     $scope.upload = function (file) {
         Upload.upload({
             url: '/api/images/',
-            data: { file: file, 'username': $scope.user.username },
+            data: { file: file, 'username': $scope.user.username }, // send file and username for naming the file
             headers: {
                 'Content-Type': 'multipart/form-data'
             },
