@@ -164,8 +164,12 @@ router.put('/users/:id', function(req, res, next) {
             role: req.body.role
           }
         }, function (err, updated) {
-          if (err) console.log(err);
-          else res.json({ success: true, message: 'Successfully updated user with id: '+req.params.id })
+          if (err) {
+            res.json({ success: false, message: 'E-mail is already in use.' });
+            console.log(err);
+          } else {
+            res.json({ success: true, message: 'Successfully updated user with id: '+req.params.id })
+          }
       });
     } else {
       res.json({ success: false, message: 'No such user with id: '+req.params.id });

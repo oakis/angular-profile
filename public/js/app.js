@@ -146,7 +146,7 @@ app.controller('showProfile', function($scope,$http,$window,$cookies){
   });
 })
 
-app.controller('adminUsers', function($scope,$http,$window,$timeout,$cookies){
+app.controller('adminUsers', function($scope,$http,$window,$timeout,$cookies,$anchorScroll){
 
 $scope.edit;
 $scope.editFrame = false;
@@ -154,6 +154,14 @@ $scope.users;
 $scope.message;
 $scope.hide = true;
 $scope.needAccept;
+
+function getNeedAccept (user) {
+	if (user.role == 'needAccept') {
+		return true;
+	} else {
+		return false;
+	}
+}
 	
 	// GET all users
 	$http({
@@ -168,13 +176,6 @@ $scope.needAccept;
 			$scope.admin = ($cookies.get('admin') == 'true'); // if cookie is true set true, else set false
 	    $scope.loggedIn = ($cookies.get('loggedIn') == 'true');
 	    $scope.userLogin = $cookies.get('userLogin');
-	    function getNeedAccept (user) {
-	    	if (user.role == 'needAccept') {
-	    		return true;
-	    	} else {
-	    		return false;
-	    	}
-	    }
 	    $scope.needAccept = $scope.users.filter(getNeedAccept).length;
 	    if ($scope.needAccept >= 2) {
 	    	$scope.needAcceptMsg = 'users are waiting to be accepted.';
@@ -190,6 +191,7 @@ $scope.needAccept;
 		$scope.message = null;
 		$scope.edit = this.user; // populate edit with clicked user
 		$scope.editFrame = true; // show edit frame
+		$timeout(function() { $anchorScroll('editFrame') }, 100);
 	}
 
 	$scope.saveUser = function () {
@@ -198,11 +200,19 @@ $scope.needAccept;
 			url: '/api/users/'+$scope.edit._id,
 			data: this.edit
 		}).then(function (response) {
-	    $scope.message = response.data.message;
-	    $scope.edit = null; // clear edit
-			$scope.editFrame = false; // hide edit frame
-			$scope.hide = false; // show message
-			$timeout(function() { $scope.hide = true }, 3000); // hide message after 3 seconds
+			if (response.data.success) {
+		    $scope.message = response.data.message;
+		    $scope.edit = null; // clear edit
+				$scope.editFrame = false; // hide edit frame
+				$scope.hide = false; // show message
+				$scope.needAccept = $scope.users.filter(getNeedAccept).length;
+				$timeout(function() { $scope.hide = true }, 3000); // hide message after 3 seconds
+			} else {
+				$scope.message = response.data.message;
+				$scope.hide = false; // show message
+				$scope.needAccept = $scope.users.filter(getNeedAccept).length;
+				$timeout(function() { $scope.hide = true }, 3000); // hide message after 3 seconds
+			}
 	  }, function (response) {
 	    $scope.message = response.data.message;
 	    $scope.hide = false; // show message
@@ -227,7 +237,7 @@ $scope.needAccept;
 		}
 	}
 
-	$scope.sort = function (regex) {
+	$scope.show = function (regex) {
 		$http({
 			method: 'get',
 			url: '/api/users/'+regex
@@ -237,6 +247,15 @@ $scope.needAccept;
 	    $scope.message = response.data.message;
 	    $scope.hide = false; // show message
 	  });
+	}
+
+	$scope.listOrder = function (prop) {
+		$scope.reverse = ($scope.order === prop) ? !$scope.reverse : false;
+    $scope.order = prop;
+	}
+
+	$scope.showNeedAccept = function () {
+		$scope.users = $scope.users.filter(getNeedAccept);
 	}
 
 })
