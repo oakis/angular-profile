@@ -13,7 +13,7 @@
 			<p>Editing profile for user {{edit.username}}</p>
 			<label>Firstname:</label>
 			<input type="text" ng-model="edit.firstname" value="edit.firstname">
-			<label>Surename:</label>
+			<label>Surname:</label>
 			<input type="text" ng-model="edit.surename" value="edit.surename">
 			<label>Email:</label>
 			<input type="text" ng-model="edit.email" value="edit.email">
@@ -36,7 +36,10 @@
 			<div class="profile-header">
 				<h2 ng-model="user.username">{{user.username}}</h2>
 				<div class="profile-picture">
-					<img src="">
+					<img src="/images/{{user.username}}.jpg" alt="{{user.username}} profile picture">
+					<div class="profile-picture-overlay" ng-if="isOwner">
+						<button ngf-select="upload($file)">Change picture</button>
+					</div>
 				</div>
 			</div>
 			<div class="profile-userinfo">
@@ -46,7 +49,7 @@
 				<div ng-model="user.school">School: {{user.school}}</div>
 				<div ng-model="user.city">City: {{user.city}}</div>
 				<div ng-model="user.firstname">Firstname: {{user.firstname}}</div>
-				<div ng-model="user.surename">Surename: {{user.surename}}</div>
+				<div ng-model="user.surename">Surname: {{user.surename}}</div>
 				<div ng-model="user.class">Class: {{user.class}}</div>
 			</div>
 		</div>
@@ -63,6 +66,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-cookies.js"></script>
 <script src="/js/app.js"></script>
+<script src="/js/ng-file-upload.min.js"></script>
 <script src="/js/profile.controller.js"></script>
 <script src="/js/directives.js"></script>
 </body>

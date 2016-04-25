@@ -1,4 +1,4 @@
-var app = angular.module('profile', ['ngCookies']);
+var app = angular.module('profile', ['ngCookies','ngFileUpload']);
 
 app.factory('AuthInterceptor', function ($window, $q) {
     return {

@@ -1,4 +1,4 @@
-app.controller('showProfile', function($scope,$http,$window,$cookies){
+app.controller('showProfile', function($scope,$http,$window,$cookies,Upload,$timeout){
 	$scope.edit;
 	$scope.editFrame = false;
 	$scope.users;
@@ -37,8 +37,8 @@ app.controller('showProfile', function($scope,$http,$window,$cookies){
             data: this.edit
         }).then(function (response) {
             if (response.data.success) {
-            $scope.message = response.data.message;
-            $scope.edit = null; // clear edit
+                $scope.message = response.data.message;
+                $scope.edit = null; // clear edit
                 $scope.editFrame = false; // hide edit frame
                 $scope.hide = false; // show message
                 $scope.needAccept = $scope.users.filter(getNeedAccept).length;
@@ -54,4 +54,22 @@ app.controller('showProfile', function($scope,$http,$window,$cookies){
         $scope.hide = false; // show message
       });
     }
+
+    // upload on file select or drop
+    $scope.upload = function (file) {
+        Upload.upload({
+            url: '/api/images/',
+            data: { file: file, 'username': $scope.user.username },
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            },
+            method: 'post'
+        }).then(function (response) {
+            $scope.message = response.data.message;
+            $scope.hide = false; // show message
+            $timeout(function() { $scope.hide = true }, 3000); // hide message after 3 seconds
+        }, function (resp) {
+            console.log('Error status: ' + resp.status);
+        });
+    };
 })

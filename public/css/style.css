@@ -179,13 +179,32 @@ td {
 	}
 
 .profile-picture {
-	
+	position: relative;
 }
 
 .profile-picture img {
 	width: 200px;
 	height: 250px;
 }
+
+.profile-picture-overlay {
+	width: 200px;
+	height: 250px;
+	position: absolute;
+	top: 0;
+	display: none;
+}
+
+	.profile-picture-overlay button {
+		position: absolute;
+		bottom: 0;
+		width: 100%;
+	}
+
+	.profile-picture img:hover + .profile-picture-overlay,
+	.profile-picture-overlay:hover {
+		display: block;
+	}
 
 .profile-userinfo {
 	width: 70%;

@@ -3,6 +3,7 @@ var moment	= require('moment');
 var User 		= require('../models/user');
 var jwt    	= require('jsonwebtoken');
 var config 	= require('../../config');
+var fileUpload = require('express-fileupload');
 
 var router = express.Router();
 
@@ -117,6 +118,27 @@ router.get('/profile/:username', function(req,res,next){
       }
   });
 })
+
+// Upload profile picture
+router.use(fileUpload());
+router.post('/images', function(req, res) {
+    var img;
+
+    if (!req.files) {
+        res.json({ message: 'No files were uploaded.' });
+        return;
+    }
+
+    img = req.files.file;
+    img.mv('./public/images/'+req.body.username+'.jpg', function(err) {
+        if (err) {
+            res.status(500).send(err);
+        }
+        else {
+            res.json({ message: 'File uploaded!' });
+        }
+    });
+});
 
 // ###################### //
 // ###  ADMIN  STUFF  ### //
