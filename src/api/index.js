@@ -109,11 +109,11 @@ router.post('/logout', function (req, res) {
 
 // Show user profile
 router.get('/profile/:username', function(req,res,next){
-  User.findOne({ username: req.params.username }, 'username firstname surename email class school city skills role' , function(err, data){
+  User.findOne({ username: req.params.username }, 'username firstname surename email class school city skills role', function(err, user){
       if(err) {
         return console.error('Error: ' + err);
       } else {
-        res.json(data);
+        res.json({ user: user });
       }
   });
 })
@@ -136,23 +136,17 @@ router.use(function(req, res, next) {
 
 // GET all users
 router.get('/users', function(req, res, next) {
-  User.find({}, function(err, users) {
+  User.find({}, 'username firstname surename email class school city skills role', function(err, users) {
     res.json(users);
   });
 });
 
-router.get('/users/:search', function(req, res, next) {
-  User.find({ username: new RegExp('^['+req.params.search+']', "i") }, function(err, users) {
-    res.json(users);
-  });
-})
-
 // Save user
-router.put('/users/:id', function(req, res, next) {
-  User.findOne({ _id: req.params.id }, function(err, user) {
+router.put('/users/:username', function(req, res, next) {
+  User.findOne({ username: req.params.username }, function(err, user) {
     if (user) {
       User.update(
-        { _id: req.params.id },
+        { username: req.params.username },
         { $set: {
             email: req.body.email,
             firstname: req.body.firstname,
@@ -168,12 +162,18 @@ router.put('/users/:id', function(req, res, next) {
             res.json({ success: false, message: 'E-mail is already in use.' });
             console.log(err);
           } else {
-            res.json({ success: true, message: 'Successfully updated user with id: '+req.params.id })
+            res.json({ success: true, message: 'Successfully updated user with username: '+req.params.username })
           }
       });
     } else {
-      res.json({ success: false, message: 'No such user with id: '+req.params.id });
+      res.json({ success: false, message: 'No such user with username: '+req.params.username });
     };
+  });
+})
+
+router.get('/users/:search', function(req, res, next) {
+  User.find({ username: new RegExp('^['+req.params.search+']', "i") }, function(err, users) {
+    res.json(users);
   });
 })
 

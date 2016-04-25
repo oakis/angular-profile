@@ -3,11 +3,34 @@
 <head>
 	<meta charset="utf-8">
 	<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto'>
-	<link rel="stylesheet" href="../css/style.css">
+	<link rel="stylesheet" href="/css/style.css">
 	<title>Profile</title>
 </head>
 <body ng-app="profile" ng-controller="showProfile">
 	<header main-menu></header>
+	<div class="container">
+		<div class="inner" ng-show="editFrame" id="editFrame">
+			<p>Editing profile for user {{edit.username}}</p>
+			<label>Firstname:</label>
+			<input type="text" ng-model="edit.firstname" value="edit.firstname">
+			<label>Surename:</label>
+			<input type="text" ng-model="edit.surename" value="edit.surename">
+			<label>Email:</label>
+			<input type="text" ng-model="edit.email" value="edit.email">
+			<label>Class:</label>
+			<input type="text" ng-model="edit.class" value="edit.class">
+			<label>School:</label>
+			<input type="text" ng-model="edit.school" value="edit.school">
+			<label>City:</label>
+			<input type="text" ng-model="edit.city" value="edit.city">
+			<label>Skills:</label>
+			<input type="text" ng-model="edit.skills" value="edit.skills">
+			<button class="cta" ng-click="saveUser()">Save</button>
+			<button ng-click="editFrame = false">Cancel</button>
+		</div>
+		<a href="" ng-if="isOwner" ng-hide="editFrame" ng-click="editUser()">[edit profile]</a>
+	</div>
+	<div class="message" ng-model="message" ng-hide="hide">{{message}}</div>
 	<div class="container">
 		<div class="row">
 			<div class="profile-header">
@@ -39,7 +62,8 @@
 	</div>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-cookies.js"></script>
-<script src="../js/app.js"></script>
-<script src="../js/directives.js"></script>
+<script src="/js/app.js"></script>
+<script src="/js/profile.controller.js"></script>
+<script src="/js/directives.js"></script>
 </body>
 </html>

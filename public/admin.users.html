@@ -3,11 +3,11 @@
 <head>
 	<meta charset="utf-8">
 	<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto'>
-	<link rel="stylesheet" href="../css/style.css">
+	<link rel="stylesheet" href="/css/style.css">
 	<title>Administration</title>
 </head>
 <body ng-app="profile" ng-controller="adminUsers">
-	<header ng-include="'../templates/menu.html'"></header>
+	<header ng-include="'/templates/menu.html'"></header>
 	<div class="container">
 		<div class="inner" ng-show="editFrame" id="editFrame">
 			<p>Editing profile for user {{edit.username}}</p>
@@ -79,7 +79,8 @@
 	</div>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-cookies.js"></script>
-<script src="../js/app.js"></script>
-<script src="../js/directives.js"></script>
+<script src="/js/app.js"></script>
+<script src="/js/admin.controller.js"></script>
+<script src="/js/directives.js"></script>
 </body>
 </html>
