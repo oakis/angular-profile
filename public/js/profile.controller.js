@@ -1,9 +1,13 @@
 app.controller('showProfile', function($scope,$http,$window,$cookies,Upload,$timeout,$anchorScroll){
+
 	$scope.edit;
 	$scope.editFrame = false;
-	$scope.users;
+	$scope.user;
 	$scope.message;
 	$scope.hide = true;
+    $scope.class;
+
+    // Get profile
 	$http({
 		method: 'get',
 		url: '/api'+window.location.pathname
@@ -17,11 +21,29 @@ app.controller('showProfile', function($scope,$http,$window,$cookies,Upload,$tim
         } else {
         	$scope.isOwner = false;
         }
-        console.log($scope.isOwner);
+        $scope.getClass(); // get users class
     }, function (response) {
         console.log(response);
         $window.location.href = '/login';
     });
+
+    $scope.getClass = function () {
+        // Get class mates
+        $http({
+            method: 'get',
+            url: '/api/class/'+$scope.user.class
+        }).then(function (response) {
+            $scope.class =
+            response.data.classmates.filter(function(user,i) {
+                if (response.data.classmates[i].username == $scope.user.username) {
+                    return false;
+                }
+                return true;
+            });
+        }, function (response) {
+            console.log(response);
+        });
+    }
 
     $scope.editUser = function () {
         $scope.message = null;

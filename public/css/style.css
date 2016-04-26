@@ -133,6 +133,7 @@ td {
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-start;
+	flex-wrap: wrap;
 }
 
 .search * {
@@ -217,4 +218,16 @@ td {
 
 .profile-skills {
 	
+}
+
+.classmate {
+	width: 150px;
+	height: 200px;
+	padding: 10px;
+	margin: 25px auto;
+}
+
+.classmate img {
+	width: 150px;
+	height: 200px;
 }

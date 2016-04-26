@@ -63,6 +63,7 @@ router.post('/register', function(req,res){
   }
 })
 
+// Check if logged in
 router.use(function(req, res, next) {
 
   // check header or url parameters or post parameters for token
@@ -118,6 +119,18 @@ router.get('/profile/:username', function(req,res,next){
       }
   });
 })
+
+// Get users class mates
+router.get('/class/:class', function(req,res,next){
+  User.find({ class: req.params.class }, 'username', function(err, users){
+      if(err) {
+        return console.error('Error: ' + err);
+      } else {
+        res.json({ classmates: users });
+      }
+  });
+})
+
 
 // Upload profile picture
 router.use(fileUpload());
