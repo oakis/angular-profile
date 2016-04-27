@@ -79,7 +79,7 @@ app.controller('showProfile', function($scope,$http,$window,$cookies,Upload,$tim
         $scope.editFrame = false;
     }
 
-    // upload on file select or drop
+    // upload on file select
     $scope.upload = function (file) {
         Upload.upload({
             url: '/api/images/',
@@ -96,4 +96,22 @@ app.controller('showProfile', function($scope,$http,$window,$cookies,Upload,$tim
             console.log('Error status: ' + resp.status);
         });
     };
+
+    // show how many others have the same skill
+    $scope.skillCompare = function (skill) {
+        $http({
+            method: 'get',
+            url: '/api/skill/'+skill
+        }).then(function (response) {
+            $scope.numSkill = response.data.sum.length;
+            $scope.showNumSkill = true;
+        }, function (response) {
+            console.log('err: '+response);
+        });
+    }
+
+    // hide skill message
+    $scope.skillHide = function () {
+        $scope.showNumSkill = false;
+    }
 })

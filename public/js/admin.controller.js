@@ -48,10 +48,20 @@ function getNeedAccept (user) {
 	}
 
 	$scope.saveUser = function () {
+		var updateUser = {
+      email: this.edit.email,
+      firstname: this.edit.firstname,
+      surename: this.edit.surename,
+      class: this.edit.class,
+      school: this.edit.school,
+      city: this.edit.city,
+      skills: this.edit.skills.split('+'),
+      role: this.edit.role
+    };
 		$http({
 			method: 'put',
 			url: '/api/users/'+$scope.edit.username,
-			data: this.edit
+			data: updateUser
 		}).then(function (response) {
 			if (response.data.success) {
 		    $scope.message = response.data.message;
@@ -93,6 +103,18 @@ function getNeedAccept (user) {
 	$scope.show = function (regex) {
 		$http({
 			method: 'get',
+			url: '/api/users/'+regex
+		}).then(function (response) {
+	    $scope.users = response.data;
+	  }, function (response) {
+	    $scope.message = response.data.message;
+	    $scope.hide = false; // show message
+	  });
+	}
+
+	$scope.searchUser = function (regex) {
+		$http({
+			method: 'post',
 			url: '/api/users/'+regex
 		}).then(function (response) {
 	    $scope.users = response.data;

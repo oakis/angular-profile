@@ -131,6 +131,20 @@ router.get('/class/:class', function(req,res,next){
   });
 })
 
+// Aggregate skills
+router.get('/skill/:skill', function(req,res,next) {
+  User.aggregate(
+    {"$match": { skills: req.params.skill } },
+    { $project: { 'username': 1, '_id': 0, 'hej': 1  } },
+    function(err, sumUsers){
+      if(err) {
+        return console.error('Error: ' + err);
+      } else {
+        res.json({ sum: sumUsers });
+      }
+  });
+})
+
 
 // Upload profile picture
 router.use(fileUpload());
@@ -208,6 +222,12 @@ router.put('/users/:username', function(req, res, next) {
 
 router.get('/users/:search', function(req, res, next) {
   User.find({ username: new RegExp('^['+req.params.search+']', "i") }, function(err, users) {
+    res.json(users);
+  });
+})
+
+router.post('/users/:search', function(req, res, next) {
+  User.find({ username: new RegExp('^'+req.params.search+'$', "i") }, function(err, users) {
     res.json(users);
   });
 })

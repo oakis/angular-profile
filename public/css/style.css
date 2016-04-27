@@ -159,7 +159,7 @@ td {
 	height: 50px;
 	line-height: 50px;
 	margin: auto;
-  position: absolute;
+  position: fixed;
   top: 20%; left: 20%; bottom: 20%; right: 20%;
   text-align: center;
   border-radius: 3px;
@@ -224,10 +224,14 @@ td {
 	width: 150px;
 	height: 200px;
 	padding: 10px;
-	margin: 25px auto;
+	margin: 25px 0;
 }
 
 .classmate img {
 	width: 150px;
 	height: 200px;
+}
+
+.flex-class {
+	justify-content: space-between;
 }

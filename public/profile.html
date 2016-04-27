@@ -58,14 +58,16 @@
 		</div>
 		<div class="profile-skills">
 			<h3>Skills</h3>
+			<p>Hover over skill to show how many others have the same skill.</p>
+			<div ng-show="showNumSkill" class="message">{{numSkill}} others have this skill!</div>
 			<div ng-repeat="skill in user.skills">
-				<div>{{skill}}</div>
+				<div><span ng-mouseenter="skillCompare(skill)" ng-mouseleave="skillHide()">{{skill}}</span></div>
 			</div>
 		</div>
 		<div class="profile-class">
 			<h3>{{user.username}}'s class</h3>
-			<div class="row">
-				<div class="classmate" ng-repeat="student in class">
+			<div class="row flex-class">
+				<div class="classmate" ng-repeat="student in class | orderBy: 'username'">
 					<a href="/profile/{{student.username}}">
 					<div><img src="/images/{{student.username}}.jpg" alt="{{student.username}}"></div>
 					<div>{{student.username}}</div>
