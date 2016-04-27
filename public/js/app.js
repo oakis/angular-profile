@@ -24,7 +24,7 @@ app.config(function ($httpProvider) {
     $httpProvider.interceptors.push('AuthInterceptor');
 });
 
-app.controller('logout', function($scope,$http,$cookies,$window,$timeout){
+app.controller('logout', function($scope,$http,$cookies,$window){
 
 	$scope.hide = true;
 	$scope.message = '';
@@ -39,7 +39,6 @@ app.controller('logout', function($scope,$http,$cookies,$window,$timeout){
 		$cookies.remove('loggedIn');
   	$scope.hide = false;
   	$scope.message = response.data.message;
-  	$timeout(function() { $scope.hide = true }, 3000); // hide message after 3 seconds
   }, function (response) {
     console.log(response);
   });

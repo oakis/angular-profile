@@ -4,9 +4,15 @@
 	<meta charset="utf-8">
 	<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto'>
 	<link rel="stylesheet" href="css/style.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-cookies.js"></script>
+	<script src="js/app.js"></script>
+	<script src="js/profile.controller.js"></script>
+	<script src="js/directives.js"></script>
+	<script src="/js/ng-file-upload.min.js"></script>
 	<title>Register</title>
 </head>
-<body ng-app="profile">
+<body ng-app="profile" ng-cloak>
 	<header main-menu></header>
 	<div class="container" ng-controller="register">
 		<div class="inner">
@@ -26,11 +32,5 @@
 		</div>
 		<div ng-hide="hide" class="message">{{message}}</div>
 	</div>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-cookies.js"></script>
-<script src="js/app.js"></script>
-<script src="js/profile.controller.js"></script>
-<script src="js/directives.js"></script>
-<script src="/js/ng-file-upload.min.js"></script>
 </body>
 </html>
