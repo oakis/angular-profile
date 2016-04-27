@@ -55,7 +55,7 @@ function getNeedAccept (user) {
       class: this.edit.class,
       school: this.edit.school,
       city: this.edit.city,
-      skills: this.edit.skills.split('+'),
+      skills: this.edit.skills.split(','),
       role: this.edit.role
     };
 		$http({
