@@ -61,10 +61,10 @@
 		<div class="profile-timeline">
 			<h3>Timeline</h3>
 		</div>
-		<div ng-show="showNumSkill" class="message">{{numSkill}} others have this skill!</div>
+		<div ng-show="showNumSkill" class="message"><span ng-if="numSkill >= 1">{{numSkill}}</span> {{numSkillMsg}}</div>
 		<div class="profile-skills">
 			<h3>Skills</h3>
-			<p>Hover over skill to show how many others have the same skill.</p>
+			<p><em>Hover over skill to show how many others have the same skill.</em></p>
 			<div>
 				<div ng-repeat="skill in user.skills">
 					<span ng-mouseenter="skillCompare(skill)" ng-mouseleave="skillHide()" class="skill">{{skill}}</span>

@@ -172,7 +172,7 @@ td {
 #################*/
 
 .profile-header {
-	width: 30%;
+	margin-right: 3em;
 }
 
 	.profile-header h2 {
@@ -208,8 +208,7 @@ td {
 	}
 
 .profile-userinfo {
-	width: 70%;
-	margin: 5em 0;
+	margin-top: 5em;
 }
 
 .profile-timeline {
@@ -230,6 +229,7 @@ td {
 		border: 0;
 		border-radius: 3px;
 		text-transform: uppercase;
+		cursor: default;
 	}
 
 .classmate {

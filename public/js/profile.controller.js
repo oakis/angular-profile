@@ -6,6 +6,7 @@ app.controller('showProfile', function($scope,$http,$window,$cookies,Upload,$tim
 	$scope.message;
 	$scope.hide = true;
     $scope.class;
+    $scope.numSkillMsg;
 
     // Get profile
 	$http({
@@ -103,8 +104,13 @@ app.controller('showProfile', function($scope,$http,$window,$cookies,Upload,$tim
             method: 'get',
             url: '/api/skill/'+skill
         }).then(function (response) {
-            $scope.numSkill = response.data.sum.length;
+            $scope.numSkill = response.data.sum.length-1;
             $scope.showNumSkill = true;
+            if ($scope.numSkill <= 0) {
+                $scope.numSkillMsg = 'Nobody has this skill, you are truly amazing!';
+            } else {
+                $scope.numSkillMsg = 'others have this skill!';
+            }
         }, function (response) {
             console.log('err: '+response);
         });
